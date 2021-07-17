@@ -5,21 +5,29 @@ defmodule LivechatWeb.RoomLive do
   @impl true
   def mount(%{"room" => room_id}, _session, socket) do
     topic = "room: " <> room_id
+    username = MnemonicSlugs.generate_slug(2)
     if connected?(socket), do: LivechatWeb.Endpoint.subscribe(topic)
 
     {:ok,
      assign(socket,
        room_id: room_id,
        topic: topic,
+       username: username,
        message: "",
-       messages: [%{uuid: UUID.uuid4(), content: "Avi joined the chat."}],
+       messages: [
+         %{
+           id: UUID.uuid4(),
+           username: "system",
+           content: "#{username} joined."
+         }
+       ],
        temporary_assigns: [messages: []]
      )}
   end
 
   @impl true
   def handle_event("submit_message", %{"chat" => %{"message" => message}}, socket) do
-    message = %{uuid: UUID.uuid4(), content: message}
+    message = %{id: UUID.uuid4(), username: socket.assigns.username, content: message}
 
     LivechatWeb.Endpoint.broadcast(
       socket.assigns.topic,
