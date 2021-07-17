@@ -6,7 +6,11 @@ defmodule LivechatWeb.RoomLive do
   def mount(%{"room" => room_id}, _session, socket) do
     topic = "room: " <> room_id
     username = MnemonicSlugs.generate_slug(2)
-    if connected?(socket), do: LivechatWeb.Endpoint.subscribe(topic)
+
+    if connected?(socket) do
+      LivechatWeb.Endpoint.subscribe(topic)
+      LivechatWeb.Presence.track(self(), topic, username, %{})
+    end
 
     {:ok,
      assign(socket,
@@ -14,13 +18,8 @@ defmodule LivechatWeb.RoomLive do
        topic: topic,
        username: username,
        message: "",
-       messages: [
-         %{
-           id: UUID.uuid4(),
-           username: "system",
-           content: "#{username} joined."
-         }
-       ],
+       messages: [],
+       user_list: [],
        temporary_assigns: [messages: []]
      )}
   end
@@ -46,5 +45,44 @@ defmodule LivechatWeb.RoomLive do
   @impl true
   def handle_info(%{event: "new-message", payload: message}, socket) do
     {:noreply, assign(socket, messages: [message])}
+  end
+
+  @impl true
+  def handle_info(%{event: "presence_diff", payload: %{joins: joins, leaves: leaves}}, socket) do
+    join_messages =
+      joins
+      |> Map.keys()
+      |> Enum.map(fn username ->
+        %{type: :system, id: UUID.uuid4(), content: "#{username} joined."}
+      end)
+
+    leave_messages =
+      leaves
+      |> Map.keys()
+      |> Enum.map(fn username ->
+        %{type: :system, id: UUID.uuid4(), content: "#{username} left."}
+      end)
+
+    user_list =
+      LivechatWeb.Presence.list(socket.assigns.topic)
+      |> Map.keys()
+
+    {:noreply,
+     assign(socket,
+       messages: join_messages ++ leave_messages,
+       user_list: user_list
+     )}
+  end
+
+  def display_message(%{type: :system, id: id, content: content}) do
+    ~E"""
+    <p id="<%= id %>"><em><%= content %></em></p>
+    """
+  end
+
+  def display_message(%{id: id, content: content, username: username}) do
+    ~E"""
+    <p id="<%= id %>"><strong><%= username %></strong>: <%= content %></p>
+    """
   end
 end

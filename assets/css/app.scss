@@ -3,18 +3,26 @@
 
 #chat-container {
   display: flex;
-  border: 1px solid #cccccc;
-  padding: 1em;
-  margin: -1em 1em 1em -1em;
-  flex-direction: column;
   justify-content: space-between;
   height: 500px;
 }
 
 #chat-messages {
+  border: 1px solid #cccccc;
+  margin: -1em 1em 1em -1em;
+  padding: 1em;
   flex-grow: 1;
 }
 
+#chat-messages p {
+  margin: 0;
+  padding: 0;
+}
+
+#user-list p {
+  margin: 0;
+  padding: 0;
+}
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
 .phx-no-feedback .invalid-feedback {
