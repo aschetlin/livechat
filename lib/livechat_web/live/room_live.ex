@@ -11,6 +11,7 @@ defmodule LivechatWeb.RoomLive do
      assign(socket,
        room_id: room_id,
        topic: topic,
+       message: "",
        messages: [%{uuid: UUID.uuid4(), content: "Avi joined the chat."}],
        temporary_assigns: [messages: []]
      )}
@@ -26,7 +27,12 @@ defmodule LivechatWeb.RoomLive do
       message
     )
 
-    {:noreply, socket}
+    {:noreply, assign(socket, message: "")}
+  end
+
+  @impl true
+  def handle_event("form_update", %{"chat" => %{"message" => message}}, socket) do
+    {:noreply, assign(socket, message: message)}
   end
 
   @impl true
