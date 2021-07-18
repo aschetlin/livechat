@@ -1,1 +1,11 @@
-<button phx-click="random-room" title="Create a random room">Create a random room</button>
+<div class="join-options">
+  <button phx-click="random-room" id="create-room">
+    Join random room
+  </button>
+
+  <em> or </em>
+
+  <%= f = form_for :room, "#", id: "join-room", phx_submit: :join_room %>
+  <%= text_input f, :room_id, placeholder: "Enter room name..." %>
+  </form>
+</div>

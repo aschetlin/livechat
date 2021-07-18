@@ -28,6 +28,10 @@ select {
   width: auto;
 }
 
+.container a {
+  color: #0069d9;
+}
+
 /* Phoenix promo and logo */
 .phx-hero {
   text-align: center;
@@ -63,7 +67,7 @@ header section {
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 header section :first-child {
   order: 2;

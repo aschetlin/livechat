@@ -3,26 +3,28 @@
     <strong><%= @username %></strong>!
 </p>
 
-<div id="chat-container">
-    <div id="chat-messages" phx-update="append">
-        <%= for message <- @messages do %>
-        <%= display_message(message) %>
-        <% end %>
+<div class="chat-components">
+    <div id="chat-container">
+        <div id="chat-messages" phx-update="append">
+            <%= for message <- @messages do %>
+            <%= display_message(message) %>
+            <% end %>
+        </div>
+
+        <div id="user-list">
+            <h3>Users Online</h3>
+            <%= for user <- @user_list do %>
+            <p><%= user %></p>
+            <% end %>
+        </div>
     </div>
 
-    <div id="user-list">
-        <h3>Users Online</h3>
-        <%= for user <- @user_list do %>
-        <p><%= user %></p>
-        <% end %>
-    </div>
-</div>
-
-<div id="message-input">
-    <%= f = form_for :chat, "#", id: "chat-form",
+    <div id="message-input">
+        <%= f = form_for :chat, "#", id: "chat-form",
         phx_submit: :submit_message, phx_change: :form_update %>
 
-    <%= text_input f, :message, value: @message,
+        <%= text_input f, :message, value: @message,
         placeholder: "Enter a message..." %>
-    </form>
+        </form>
+    </div>
 </div>
