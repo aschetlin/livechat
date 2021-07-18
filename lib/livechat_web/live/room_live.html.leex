@@ -26,5 +26,9 @@
         <%= text_input f, :message, value: @message,
         placeholder: "Enter a message..." %>
         </form>
+
+        <%= if length(@typing) != 0  do %>
+        <%= display_typing(@typing) %>
+        <% end %>
     </div>
 </div>
