@@ -121,19 +121,24 @@ defmodule LivechatWeb.RoomLive do
     length = length(typers)
 
     cond do
+      length == 0 ->
+        ~E"""
+        <em>&nbsp;</em>
+        """
+
       length == 1 ->
         ~E"""
-        <p><%= typers %> is typing...</p>
+        <em><%= typers %> is typing...</em>
         """
 
       length > 1 && length < 4 ->
         ~E"""
-        <p><%= Enum.join(typers, " and ") %> are typing...</p>
+        <em><%= Enum.join(typers, " and ") %> are typing...</em>
         """
 
       true ->
         ~E"""
-        <p>several people are typing...</p>
+        <em>several people are typing...</em>
         """
     end
   end

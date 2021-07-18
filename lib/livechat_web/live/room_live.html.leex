@@ -3,7 +3,7 @@
     <strong><%= @username %></strong>!
 </p>
 
-<div class="chat-components">
+<div id="chat-components">
     <div id="chat-container">
         <div id="chat-messages" phx-update="append">
             <%= for message <- @messages do %>
@@ -11,24 +11,22 @@
             <% end %>
         </div>
 
-        <div id="user-list">
-            <h3>Users Online</h3>
-            <%= for user <- @user_list do %>
-            <p><%= user %></p>
-            <% end %>
+        <div id="message-input">
+            <%= display_typing(@typing) %>
+
+            <%= f = form_for :chat, "#", id: "chat-form",
+            phx_submit: :submit_message, phx_change: :form_update %>
+
+            <%= text_input f, :message, value: @message,
+            placeholder: "Enter a message..." %>
+            </form>
         </div>
     </div>
 
-    <div id="message-input">
-        <%= f = form_for :chat, "#", id: "chat-form",
-        phx_submit: :submit_message, phx_change: :form_update %>
-
-        <%= text_input f, :message, value: @message,
-        placeholder: "Enter a message..." %>
-        </form>
-
-        <%= if length(@typing) != 0  do %>
-        <%= display_typing(@typing) %>
+    <div id="user-list">
+        <h4>Users Online</h4>
+        <%= for user <- @user_list do %>
+        <p><%= user %></p>
         <% end %>
     </div>
 </div>

@@ -11,15 +11,23 @@
   margin-right: 1em;
 }
 
+#chat-components {
+  display: flex;
+  flex-direction: row;
+}
+
 #chat-container {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   height: 500px;
+  width: 85%;
 }
 
 #chat-messages {
   border: 1px solid #cccccc;
-  margin: -1em 1em 1em -1em;
+  margin-right: 1em;
+  margin-bottom: 1em;
   padding: 1em;
   flex-grow: 1;
 }
@@ -32,6 +40,10 @@
 #user-list p {
   margin: 0;
   padding: 0;
+}
+
+#message-input {
+  margin-right: 1em;
 }
 
 /* LiveView specific classes for your customizations */
