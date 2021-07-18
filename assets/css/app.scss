@@ -3,12 +3,15 @@
 
 .join-options {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 }
 
-.join-options em {
-  margin-left: 1em;
-  margin-right: 1em;
+.join-options h3 {
+  text-align: center;
+}
+
+#room_room_id {
+  text-align: center;
 }
 
 #chat-components {

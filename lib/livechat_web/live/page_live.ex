@@ -4,16 +4,38 @@ defmodule LivechatWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    {:ok,
+     assign(
+       socket,
+       query: "",
+       random_id: MnemonicSlugs.generate_slug(4),
+       room_id: "",
+       results: %{}
+     )}
   end
 
   @impl true
-  def handle_event("random-room", _params, socket) do
-    {:noreply, push_redirect(socket, to: "/" <> MnemonicSlugs.generate_slug(4))}
+  def handle_event("join_room", %{"room" => %{"room_id" => ""}}, socket) do
+    {:noreply, push_redirect(socket, to: "/" <> socket.assigns.random_id)}
   end
 
   @impl true
   def handle_event("join_room", %{"room" => %{"room_id" => room_id}}, socket) do
     {:noreply, push_redirect(socket, to: "/" <> room_id)}
+  end
+
+  @impl true
+  def handle_event("join_room", %{"value" => ""}, socket) when socket.assigns.room_id == "" do
+    {:noreply, push_redirect(socket, to: "/" <> socket.assigns.random_id)}
+  end
+
+  @impl true
+  def handle_event("join_room", %{"value" => ""}, socket) when socket.assigns.room_id != "" do
+    {:noreply, push_redirect(socket, to: "/" <> socket.assigns.room_id)}
+  end
+
+  @impl true
+  def handle_event("form_update", %{"room" => %{"room_id" => room_id}}, socket) do
+    {:noreply, assign(socket, room_id: room_id)}
   end
 end
