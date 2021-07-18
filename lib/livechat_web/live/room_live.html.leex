@@ -12,7 +12,7 @@
         </div>
 
         <div id="message-input">
-            <%= display_typing(@typing) %>
+            <%= display_typing(MapSet.delete(@typing, @username)) %>
 
             <%= f = form_for :chat, "#", id: "chat-form",
             phx_submit: :submit_message, phx_change: :form_update %>
