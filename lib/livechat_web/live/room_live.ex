@@ -20,7 +20,7 @@ defmodule LivechatWeb.RoomLive do
        message: "",
        messages: [],
        user_list: [],
-       typing: [],
+       typing: MapSet.new(),
        temporary_assigns: [messages: []]
      )}
   end
@@ -46,7 +46,7 @@ defmodule LivechatWeb.RoomLive do
   def handle_event("form_update", %{"chat" => %{"message" => message}}, socket) do
     LivechatWeb.Endpoint.broadcast(
       socket.assigns.topic,
-      "new-typer",
+      if(message == "", do: "remove-typer", else: "new-typer"),
       socket.assigns.username
     )
 
@@ -55,24 +55,22 @@ defmodule LivechatWeb.RoomLive do
 
   @impl true
   def handle_info(%{event: "new-typer", payload: typer}, socket) do
-    existing = socket.assigns.typing
-    typing = if typer in existing, do: existing, else: existing ++ [typer]
+    typing = MapSet.put(socket.assigns.typing, typer)
     {:noreply, assign(socket, typing: typing)}
   end
 
   @impl true
-  def handle_info(%{event: "typing-update", payload: typers}, socket) do
-    {:noreply, assign(socket, typing: typers)}
+  def handle_info(%{event: "remove-typer", payload: username}, socket) do
+    typing = MapSet.delete(socket.assigns.typing, username)
+    {:noreply, assign(socket, typing: typing)}
   end
 
   @impl true
   def handle_info(%{event: "new-message", payload: message}, socket) do
-    typers = List.delete(socket.assigns.typing, socket.assigns.username)
-
     LivechatWeb.Endpoint.broadcast(
       socket.assigns.topic,
-      "typing-update",
-      typers
+      "remove-typer",
+      socket.assigns.username
     )
 
     {:noreply, assign(socket, messages: [message])}
@@ -118,7 +116,7 @@ defmodule LivechatWeb.RoomLive do
   end
 
   def display_typing(typers) do
-    length = length(typers)
+    length = MapSet.size(typers)
 
     cond do
       length == 0 ->
@@ -128,7 +126,7 @@ defmodule LivechatWeb.RoomLive do
 
       length == 1 ->
         ~E"""
-        <em><%= typers %> is typing...</em>
+        <em><%= MapSet.to_list(typers) %> is typing...</em>
         """
 
       length > 1 && length < 4 ->
