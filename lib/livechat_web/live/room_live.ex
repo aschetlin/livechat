@@ -82,7 +82,12 @@ defmodule LivechatWeb.RoomLive do
       joins
       |> Map.keys()
       |> Enum.map(fn username ->
-        %{type: :system, id: UUID.uuid4(), content: "#{username} joined."}
+        %{
+          type: :system,
+          id: UUID.uuid4(),
+          content:
+            if(username == socket.assigns.username, do: "you", else: username) <> " joined."
+        }
       end)
 
     leave_messages =
