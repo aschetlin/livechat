@@ -10,6 +10,17 @@
   text-align: center;
 }
 
+#join-room {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.join-button {
+  width: min-content;
+}
+
 #room_room_id {
   text-align: center;
 }
@@ -25,7 +36,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 500px;
-  width: 85%;
+  width: 75%;
 }
 
 #chat-messages {
@@ -42,8 +53,13 @@
 }
 
 #user-list p {
-  margin: 0;
-  padding: 0;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid black;
+}
+
+#user-list hr {
+  color: black;
 }
 
 #message-input {

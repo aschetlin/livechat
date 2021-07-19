@@ -16,22 +16,14 @@ defmodule LivechatWeb.PageLive do
 
   @impl true
   def handle_event("join_room", %{"room" => %{"room_id" => ""}}, socket) do
+    Logger.info("1")
     {:noreply, push_redirect(socket, to: "/" <> socket.assigns.random_id)}
   end
 
   @impl true
   def handle_event("join_room", %{"room" => %{"room_id" => room_id}}, socket) do
+    Logger.info("2")
     {:noreply, push_redirect(socket, to: "/" <> room_id)}
-  end
-
-  @impl true
-  def handle_event("join_room", %{"value" => ""}, socket) when socket.assigns.room_id == "" do
-    {:noreply, push_redirect(socket, to: "/" <> socket.assigns.random_id)}
-  end
-
-  @impl true
-  def handle_event("join_room", %{"value" => ""}, socket) when socket.assigns.room_id != "" do
-    {:noreply, push_redirect(socket, to: "/" <> socket.assigns.room_id)}
   end
 
   @impl true

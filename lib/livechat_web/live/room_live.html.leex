@@ -14,12 +14,16 @@
         <div id="message-input">
             <%= display_typing(MapSet.delete(@typing, @username)) %>
 
-            <%= f = form_for :chat, "#", id: "chat-form",
-            phx_submit: :submit_message, phx_change: :form_update %>
+            <div class="input-div">
+                <%= f = form_for :chat, "#", id: "chat-form",
+                phx_submit: :submit_message, phx_change: :form_update %>
 
-            <%= text_input f, :message, value: @message,
-            placeholder: "Enter a message..." %>
-            </form>
+                <%= text_input f, :message, value: @message,
+                placeholder: "Enter a message..." %>
+
+                <% submit "Send", class: "message-btn" %>
+                </form>
+            </div>
         </div>
     </div>
 
